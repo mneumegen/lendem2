@@ -1,0 +1,29 @@
+{
+  "logoSource": "/images/logo.svg",
+  "logoAlt": "Logo",
+  "links": [
+    {
+      "name": "About Us",
+      "path": "/about-us/"
+    },
+    {
+      "name": "Solutions",
+      "path": "/solutions/"
+    },
+    {
+      "name": "Partners",
+      "path": "/partners/"
+    },
+    {
+      "name": "Careers",
+      "path": "/careers/"
+    }
+  ],
+  "socials": [
+    {
+      "icon": "social/linkedin",
+      "link": "https://www.linkedin.com/company/lendem-solutions"
+    }
+  ],
+  "footerText": "© 2026 LENDEM Solutions. All rights reserved"
+}

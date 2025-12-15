@@ -1,0 +1,65 @@
+---
+import CustomSection from "@builders/custom-section/CustomSection.astro";
+import Heading from "@core-elements/heading/Heading.astro";
+import ButtonGroup from "@wrappers/button-group/ButtonGroup.astro";
+
+const {
+  heading = "",
+  buttonSections = [],
+  colorScheme,
+  backgroundColor,
+  paddingVertical = "lg",
+  class: className,
+  rounded = false,
+  ...rest
+} = Astro.props;
+---
+
+<CustomSection
+  class:list={["cta-small", className]}
+  maxContentWidth="2xl"
+  paddingHorizontal="lg"
+  paddingVertical={paddingVertical}
+  colorScheme="contrast"
+  backgroundColor="wave"
+  rounded={rounded}
+  {...rest}
+>
+  {
+    heading && (
+      <Heading level="h3" size="sm" alignX="start" data-prop="heading">
+        {heading}
+      </Heading>
+    )
+  }
+  {
+    buttonSections?.length > 0 && (
+      <ButtonGroup class="buttons" alignX="end" buttonSections={buttonSections} />
+    )
+  }
+</CustomSection>
+
+<style lang="pcss">
+  .cta-small {
+    :global(.outer-content) {
+      :global(.content) {
+        display: flex;
+        flex-direction: row;
+        gap: var(--spacing-lg);
+        align-items: center;
+
+        < * {
+          flex: 1;
+        }
+
+        .button-group {
+          margin-top: 0 !important;
+        }
+
+        @media (500px > width) {
+          flex-wrap: wrap;
+        }
+      }
+    }
+  }
+</style>

@@ -1,0 +1,38 @@
+{
+  "logoSource": "/images/logo-colored.svg",
+  "logoAlt": "Lendem",
+  "navData": [
+    {
+      "name": "Home",
+      "path": "/",
+      "children": []
+    },
+    {
+      "name": "About Us",
+      "path": "/about-us/",
+      "children": []
+    },
+    {
+      "name": "Solutions",
+      "path": "/solutions/",
+      "children": []
+    },
+    {
+      "name": "Partners",
+      "path": "/partners/",
+      "children": []
+    }
+  ],
+  "buttonSections": [
+    {
+      "_component": "building-blocks/core-elements/button",
+      "text": "Careers",
+      "link": "/careers/",
+      "iconName": "",
+      "iconPosition": "before",
+      "hideText": false,
+      "variant": "primary",
+      "size": "md"
+    }
+  ]
+}

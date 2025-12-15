@@ -1,0 +1,33 @@
+ctaSmall:
+  template: mdx_component
+  inline: false
+  preview:
+    text:
+      - CTA Small
+    subtext:
+      - key: heading
+    icon: hero
+  definitions:
+    component_name: CtaSmall
+    named_args:
+      - editor_key: heading
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: buttonSections
+        type: array
+        optional: true
+      - editor_key: colorScheme
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: backgroundColor
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: rounded
+        type: boolean
+        optional: true
+  _inputs_from_glob:
+    - /src/components/page-sections/ctas/cta-small/cta-small.cloudcannon.inputs.yml
+

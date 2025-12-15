@@ -1,0 +1,52 @@
+---
+const {
+  title,
+  text,
+  class: className,
+  editable = true,
+  "data-prop-title": customDataPropTitle = "title",
+  "data-prop-content": customDataPropContent = "text",
+  ...restProps
+} = Astro.props;
+
+const htmlAttributes = Object.fromEntries(
+  Object.entries(restProps).filter(([key]) => key !== "_component")
+);
+
+const titleDataAttributes =
+  editable && customDataPropTitle
+    ? {
+        "data-editable": "text",
+        "data-prop": customDataPropTitle,
+      }
+    : {};
+
+const contentDataAttributes =
+  editable && customDataPropContent
+    ? {
+        "data-editable": "text",
+        "data-prop": customDataPropContent,
+      }
+    : {};
+---
+
+<dt class:list={["title", className]} role="term" {...titleDataAttributes} {...htmlAttributes}>
+  {title ? <span {...titleDataAttributes}>{title}</span> : <slot name="title" />}
+</dt>
+<dd class:list={["content", className]} role="definition" {...htmlAttributes}>
+  {
+    text ? (
+      <span {...contentDataAttributes}>{text}</span>
+    ) : (
+      <span {...contentDataAttributes}>
+        <slot />
+      </span>
+    )
+  }
+</dd>
+
+<style lang="pcss">
+  .title {
+    font-weight: var(--font-weight-bold);
+  }
+</style>

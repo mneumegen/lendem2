@@ -1,0 +1,13 @@
+---
+import Icon from "@core-elements/icon/Icon.astro";
+import Side from "@components/navigation/side/Side.astro";
+import navData from "../data/nav.json";
+import { generateNavData } from "../utils/navGenerator.js";
+
+const sideNavData = await generateNavData(navData);
+---
+
+<div class="library-sidebar">
+  <Icon name="library/logo" size="none" class="sidebar-logo" />
+  <Side navData={sideNavData} />
+</div>

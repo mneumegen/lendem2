@@ -1,0 +1,99 @@
+---
+import Heading from "@core-elements/heading/Heading.astro";
+import Image from "@core-elements/image/Image.astro";
+import Text from "@core-elements/text/Text.astro";
+import Card from "@wrappers/card/Card.astro";
+
+const {
+  title = "",
+  description = "",
+  imageSource = "",
+  imageAlt = "",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const htmlAttributes = Object.fromEntries(
+  Object.entries(rest).filter(([key]) => key !== "_component")
+);
+---
+
+<Card
+  {...htmlAttributes}
+  class:list={["benefit-item", className]}
+  paddingHorizontal="lg"
+  paddingVertical="xl"
+  rounded
+  backgroundColor="base"
+  colorScheme="default"
+>
+  {
+    imageSource && (
+      <Image
+        class="benefit-image"
+        source={imageSource}
+        alt={imageAlt}
+        data-prop-src="imageSource"
+        data-prop-alt="imageAlt"
+        slot="before"
+        aspectRatio="landscape"
+      />
+    )
+  }
+  {
+    title && (
+      <Heading
+        class="benefit-title"
+        level="h3"
+        size="sm"
+        alignX="start"
+        style="margin-bottom: var(--spacing-sm); margin-top: var(--spacing-sm);"
+        data-prop="title"
+      >
+        {title}
+      </Heading>
+    )
+  }
+  {
+    description && (
+      <Text
+        class="benefit-description"
+        alignX="start"
+        style="margin-top: 0;"
+        data-prop="description"
+        text={description}
+      />
+    )
+  }
+</Card>
+
+<style lang="pcss">
+  .benefit-item {
+    box-shadow: 0 4px 10px #0000000d;
+  }
+
+  @media (800px < width < 1150px) {
+    .benefit-item {
+      display: flex;
+      flex-direction: row;
+      align-items: start;
+      gap: var(--spacing-lg);
+
+      > :global(.before-content) {
+        width: 320px;
+        height: 100%;
+
+        .image, :global(picture), :global(img) {
+          height: 100%;
+          max-width: 100%;
+          object-fit: cover;
+          object-position: center center;
+        }
+      }
+
+      > :global(.outer-content) {
+        flex: 1;
+      }
+    }
+  }
+</style>

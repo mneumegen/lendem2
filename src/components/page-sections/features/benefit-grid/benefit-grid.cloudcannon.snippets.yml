@@ -1,0 +1,53 @@
+benefitGrid:
+  template: mdx_component
+  inline: false
+  preview:
+    text:
+      - Benefit Grid
+    subtext:
+      - key: heading
+    icon: apps
+  definitions:
+    component_name: BenefitGrid
+    named_args:
+      - editor_key: eyebrow
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: heading
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: subtext
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: align
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: gap
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: minItemWidth
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: maxItemWidth
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: features
+        type: array
+      - editor_key: colorScheme
+        type: string
+        optional: true
+        remove_empty: true
+      - editor_key: backgroundColor
+        type: string
+        optional: true
+        remove_empty: true
+  _inputs_from_glob:
+    - /src/components/page-sections/features/benefit-grid/benefit-grid.cloudcannon.inputs.yml
+

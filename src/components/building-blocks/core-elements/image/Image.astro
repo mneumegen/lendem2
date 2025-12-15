@@ -1,0 +1,396 @@
+---
+import { getProviderForUrl } from "unpic";
+import AstroImage from "./AstroImage.astro";
+import UnpicImage from "./UnpicImage.astro";
+
+const {
+  source,
+  alt,
+  sizes = "(min-width: 30em) 50vw, 100vw",
+  widths = [400, 600, 800, 1200, 1600],
+  rounded = false,
+  priority = false,
+  aspectRatio: providedAspectRatio = null,
+  positionVertical = "center",
+  positionHorizontal = "center",
+  background = false,
+  editable = true,
+  width: providedWidth = "",
+  height: providedHeight = "",
+  class: className,
+  "data-prop-src": customDataPropSrc,
+  "data-prop-alt": customDataPropAlt,
+  "data-editable": customDataEditable,
+  ...rest
+} = Astro.props;
+
+const htmlAttributes = Object.fromEntries(
+  Object.entries(rest).filter(([key]) => key !== "_component")
+);
+
+const hasValidSrc = source && typeof source === "string" && source.trim() !== "";
+
+// Parse width and height if provided as strings
+const width =
+  typeof providedWidth === "string" && providedWidth.trim() !== ""
+    ? parseInt(providedWidth, 10)
+    : typeof providedWidth === "number"
+      ? providedWidth
+      : null;
+const height =
+  typeof providedHeight === "string" && providedHeight.trim() !== ""
+    ? parseInt(providedHeight, 10)
+    : typeof providedHeight === "number"
+      ? providedHeight
+      : null;
+
+const aspectRatio = providedAspectRatio;
+
+const provider = hasValidSrc ? getProviderForUrl(source) : false;
+const isExternalCDN = provider !== false;
+
+const commonProps = {
+  alt: alt || "",
+  ...(width && { width }),
+  ...(height && { height }),
+};
+
+const dataAttributes = editable
+  ? {
+      "data-editable": customDataEditable || "image",
+      "data-prop-src": customDataPropSrc || "source",
+      "data-prop-alt": customDataPropAlt || "alt",
+    }
+  : {};
+
+const positionClass = `position-${positionVertical}-${positionHorizontal}`;
+
+const sizeStyles =
+  width && height
+    ? {
+        style: `--max-width: ${width}px; margin-inline: auto;`,
+      }
+    : {};
+---
+
+<div
+  class:list={[
+    "image",
+    aspectRatio && "ratio",
+    aspectRatio && `ratio-${aspectRatio}`,
+    positionClass,
+    rounded && "rounded",
+    background && "background",
+    width && height && "has-size-constraints",
+    className,
+  ]}
+  {...htmlAttributes}
+  {...sizeStyles}
+>
+  {
+    hasValidSrc ? (
+      isExternalCDN ? (
+        <UnpicImage
+          {...commonProps}
+          {...dataAttributes}
+          source={source}
+          sizes={sizes}
+          widths={widths}
+          priority={priority}
+          aspectRatio={aspectRatio}
+          positionVertical={positionVertical}
+          positionHorizontal={positionHorizontal}
+        />
+      ) : (
+        <AstroImage
+          {...commonProps}
+          {...dataAttributes}
+          source={source}
+          sizes={sizes}
+          widths={widths}
+          priority={priority}
+          aspectRatio={aspectRatio}
+          positionVertical={positionVertical}
+          positionHorizontal={positionHorizontal}
+        />
+      )
+    ) : (
+      <picture>
+        <img
+          {...dataAttributes}
+          src={source}
+          alt={alt || ""}
+          {...(width && { width })}
+          {...(height && { height })}
+        />
+      </picture>
+    )
+  }
+</div>
+
+<style lang="pcss">
+  .image {
+    display: block;
+    margin-top: var(--spacing-lg);
+    position: relative;
+
+    &.bg {
+      :global(picture) {
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+        }
+  
+        :global(img) {
+
+          z-index: var(--layer-2);
+          position: relative;
+        }
+      }
+    }
+
+    &.ratio-square {
+      aspect-ratio: var(--ratio-square);
+    }
+
+    &.ratio-landscape {
+      aspect-ratio: var(--ratio-landscape);
+    }
+
+    &.ratio-portrait {
+      aspect-ratio: var(--ratio-portrait);
+    }
+
+    &.ratio-widescreen {
+      aspect-ratio: var(--ratio-widescreen);
+    }
+
+    &.ratio-horizontal-strip {
+      aspect-ratio: var(--ratio-horizontal-strip);
+    }
+
+    &.ratio {
+      :global(picture) {
+        height: 100%;
+      }
+
+      :global(img) {
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+      }
+    }
+
+    &.background {
+      inset: 0;
+      position: absolute;
+      margin-top: 0;
+
+      > :global(picture) {
+        height: 100%;
+      }
+
+      > :global(picture) > :global(img) {
+        height: 100%;
+        object-fit: cover;
+        width: 100%;
+      }
+    }
+
+    :global(picture) {
+      display: block;
+      margin-block: auto;
+      width: 100%;
+    }
+
+    :global(img) {
+      display: block;
+      height: auto;
+      width: 100%;
+    }
+
+    &.has-size-constraints {
+      max-width: var(--max-width);
+
+      :global(picture) {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      :global(img) {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    &.position-center-center :global(img) {
+      object-position: center center;
+    }
+
+    &.position-top-center :global(img) {
+      object-position: center top;
+    }
+
+    &.position-bottom-center :global(img) {
+      object-position: center bottom;
+    }
+
+    &.position-center-left :global(img) {
+      object-position: left center;
+    }
+
+    &.position-center-right :global(img) {
+      object-position: right center;
+    }
+
+    &.position-top-left :global(img) {
+      object-position: left top;
+    }
+
+    &.position-top-right :global(img) {
+      object-position: right top;
+    }
+
+    &.position-bottom-left :global(img) {
+      object-position: left bottom;
+    }
+
+    &.position-bottom-right :global(img) {
+      object-position: right bottom;
+    }
+
+    &.rounded :global(img) {
+      border-radius: var(--radius-lg);
+    }
+
+    &.dots-bg {
+      backgrond: pink;
+      :global(picture) {
+        padding-bottom: 32px;
+      }
+      :global(picture)::before,
+      :global(picture)::after {
+        background-image: url("data:image/svg+xml;utf8,<svg width='267' height='87' viewBox='0 0 267 87' fill='none' xmlns='http://www.w3.org/2000/svg'><g opacity='0.5'><circle cx='263.5' cy='3.5' r='3.5' transform='rotate(90 263.5 3.5)' fill='white'/><circle cx='263.5' cy='23.5' r='3.5' transform='rotate(90 263.5 23.5)' fill='white'/><circle cx='263.5' cy='43.5' r='3.5' transform='rotate(90 263.5 43.5)' fill='%23CFA25B'/><circle cx='263.5' cy='63.5' r='3.5' transform='rotate(90 263.5 63.5)' fill='white'/><circle cx='263.5' cy='83.5' r='3.5' transform='rotate(90 263.5 83.5)' fill='white'/><circle cx='243.5' cy='3.5' r='3.5' transform='rotate(90 243.5 3.5)' fill='white'/><circle cx='243.5' cy='23.5' r='3.5' transform='rotate(90 243.5 23.5)' fill='%23CFA25B'/><circle cx='243.5' cy='43.5' r='3.5' transform='rotate(90 243.5 43.5)' fill='white'/><circle cx='243.5' cy='63.5' r='3.5' transform='rotate(90 243.5 63.5)' fill='white'/><circle cx='243.5' cy='83.5' r='3.5' transform='rotate(90 243.5 83.5)' fill='%23CFA25B'/><circle cx='223.5' cy='3.5' r='3.5' transform='rotate(90 223.5 3.5)' fill='white'/><circle cx='223.5' cy='23.5' r='3.5' transform='rotate(90 223.5 23.5)' fill='white'/><circle cx='223.5' cy='43.5' r='3.5' transform='rotate(90 223.5 43.5)' fill='white'/><circle cx='223.5' cy='63.5' r='3.5' transform='rotate(90 223.5 63.5)' fill='white'/><circle cx='223.5' cy='83.5' r='3.5' transform='rotate(90 223.5 83.5)' fill='white'/><circle cx='203.5' cy='3.5' r='3.5' transform='rotate(90 203.5 3.5)' fill='white'/><circle cx='203.5' cy='23.5' r='3.5' transform='rotate(90 203.5 23.5)' fill='white'/><circle cx='203.5' cy='43.5' r='3.5' transform='rotate(90 203.5 43.5)' fill='white'/><circle cx='203.5' cy='63.5' r='3.5' transform='rotate(90 203.5 63.5)' fill='%23CFA25B'/><circle cx='203.5' cy='83.5' r='3.5' transform='rotate(90 203.5 83.5)' fill='white'/><circle cx='183.5' cy='3.5' r='3.5' transform='rotate(90 183.5 3.5)' fill='white'/><circle cx='183.5' cy='23.5' r='3.5' transform='rotate(90 183.5 23.5)' fill='white'/><circle cx='183.5' cy='43.5' r='3.5' transform='rotate(90 183.5 43.5)' fill='white'/><circle cx='183.5' cy='63.5' r='3.5' transform='rotate(90 183.5 63.5)' fill='white'/><circle cx='183.5' cy='83.5' r='3.5' transform='rotate(90 183.5 83.5)' fill='white'/><circle cx='163.5' cy='3.5' r='3.5' transform='rotate(90 163.5 3.5)' fill='white'/><circle cx='163.5' cy='23.5' r='3.5' transform='rotate(90 163.5 23.5)' fill='white'/><circle cx='163.5' cy='43.5' r='3.5' transform='rotate(90 163.5 43.5)' fill='%23CFA25B'/><circle cx='163.5' cy='63.5' r='3.5' transform='rotate(90 163.5 63.5)' fill='white'/><circle cx='163.5' cy='83.5' r='3.5' transform='rotate(90 163.5 83.5)' fill='white'/><circle cx='143.5' cy='3.5' r='3.5' transform='rotate(90 143.5 3.5)' fill='white'/><circle cx='143.5' cy='23.5' r='3.5' transform='rotate(90 143.5 23.5)' fill='%23CFA25B'/><circle cx='143.5' cy='43.5' r='3.5' transform='rotate(90 143.5 43.5)' fill='white'/><circle cx='143.5' cy='63.5' r='3.5' transform='rotate(90 143.5 63.5)' fill='white'/><circle cx='143.5' cy='83.5' r='3.5' transform='rotate(90 143.5 83.5)' fill='white'/><circle cx='123.5' cy='3.5' r='3.5' transform='rotate(90 123.5 3.5)' fill='white'/><circle cx='123.5' cy='23.5' r='3.5' transform='rotate(90 123.5 23.5)' fill='%23CFA25B'/><circle cx='123.5' cy='43.5' r='3.5' transform='rotate(90 123.5 43.5)' fill='white'/><circle cx='123.5' cy='63.5' r='3.5' transform='rotate(90 123.5 63.5)' fill='white'/><circle cx='123.5' cy='83.5' r='3.5' transform='rotate(90 123.5 83.5)' fill='white'/><circle cx='103.5' cy='3.5' r='3.5' transform='rotate(90 103.5 3.5)' fill='white'/><circle cx='103.5' cy='23.5' r='3.5' transform='rotate(90 103.5 23.5)' fill='white'/><circle cx='103.5' cy='43.5' r='3.5' transform='rotate(90 103.5 43.5)' fill='white'/><circle cx='103.5' cy='63.5' r='3.5' transform='rotate(90 103.5 63.5)' fill='white'/><circle cx='103.5' cy='83.5' r='3.5' transform='rotate(90 103.5 83.5)' fill='%23CFA25B'/><circle cx='83.5' cy='3.5' r='3.5' transform='rotate(90 83.5 3.5)' fill='white'/><circle cx='83.5' cy='23.5' r='3.5' transform='rotate(90 83.5 23.5)' fill='white'/><circle cx='83.5' cy='43.5' r='3.5' transform='rotate(90 83.5 43.5)' fill='white'/><circle cx='83.5' cy='63.5' r='3.5' transform='rotate(90 83.5 63.5)' fill='white'/><circle cx='83.5' cy='83.5' r='3.5' transform='rotate(90 83.5 83.5)' fill='%23CFA25B'/><circle cx='63.5' cy='3.5' r='3.5' transform='rotate(90 63.5 3.5)' fill='white'/><circle cx='63.5' cy='23.5' r='3.5' transform='rotate(90 63.5 23.5)' fill='white'/><circle cx='63.5' cy='43.5' r='3.5' transform='rotate(90 63.5 43.5)' fill='white'/><circle cx='63.5' cy='63.5' r='3.5' transform='rotate(90 63.5 63.5)' fill='%23CFA25B'/><circle cx='63.5' cy='83.5' r='3.5' transform='rotate(90 63.5 83.5)' fill='white'/><circle cx='43.5' cy='3.5' r='3.5' transform='rotate(90 43.5 3.5)' fill='white'/><circle cx='43.5' cy='23.5' r='3.5' transform='rotate(90 43.5 23.5)' fill='white'/><circle cx='43.5' cy='43.5' r='3.5' transform='rotate(90 43.5 43.5)' fill='white'/><circle cx='43.5' cy='63.5' r='3.5' transform='rotate(90 43.5 63.5)' fill='white'/><circle cx='43.5' cy='83.5' r='3.5' transform='rotate(90 43.5 83.5)' fill='%23CFA25B'/><circle cx='23.5' cy='3.5' r='3.5' transform='rotate(90 23.5 3.5)' fill='white'/><circle cx='23.5' cy='23.5' r='3.5' transform='rotate(90 23.5 23.5)' fill='white'/><circle cx='23.5' cy='43.5' r='3.5' transform='rotate(90 23.5 43.5)' fill='white'/><circle cx='23.5' cy='63.5' r='3.5' transform='rotate(90 23.5 63.5)' fill='white'/><circle cx='23.5' cy='83.5' r='3.5' transform='rotate(90 23.5 83.5)' fill='white'/><circle cx='3.5' cy='3.5' r='3.5' transform='rotate(90 3.5 3.5)' fill='%23CFA25B'/><circle cx='3.5' cy='23.5' r='3.5' transform='rotate(90 3.5 23.5)' fill='white'/><circle cx='3.5' cy='43.5' r='3.5' transform='rotate(90 3.5 43.5)' fill='white'/><circle cx='3.5' cy='63.5' r='3.5' transform='rotate(90 3.5 63.5)' fill='white'/><circle cx='3.5' cy='83.5' r='3.5' transform='rotate(90 3.5 83.5)' fill='white'/></g></svg>");
+        background-size: 100% 100%;
+        height: 87px;
+        opacity: 0.8;
+        width: 267px;
+      }
+      :global(picture)::before {
+        bottom: 0;
+        left: -32px;
+      }
+  
+      :global(picture)::after {
+        right: -40px;
+        top: 15px;
+      }
+    }
+  
+    &.squares-bg {
+      :global(picture)::before {
+        background: #e6f4ff;
+        border-radius: var(--radius-md);
+        content: "";
+        position: absolute;
+      }
+  
+      :global(picture)::after {
+        background: #ecd7b1;
+        border-radius: var(--radius-md);
+        content: "";
+        position: absolute;
+      }
+    }
+  
+    &.squares-1-bg {
+      :global(picture) {
+        --push-x: 31px;
+        padding-bottom: 48px;
+        padding-right: var(--push-x);
+        padding-top: 32px;
+      }
+  
+      :global(picture)::before {
+        bottom: 0;
+        height: 155px;
+        left: 50%;
+        transform: translateX(calc(-50% - (var(--push-x) / 2)));
+        width: 60%;
+      }
+  
+      :global(picture)::after {
+        height: 155px;
+        right: 0;
+        top: 0;
+        width: 155px;
+      }
+    }
+  
+    &.squares-2-bg {
+      :global(picture) {
+        --push-x: 31px;
+  
+        padding-bottom: 44px;
+        padding-left: var(--push-x);
+        padding-top: 32px;
+      }
+  
+      :global(picture)::before {
+        bottom: 0;
+        height: 155px;
+        left: 50%;
+        transform: translateX(calc(-50% + (var(--push-x) / 2)));
+        width: 361px;
+      }
+  
+      :global(picture)::after {
+        height: 307px;
+        left: 0;
+        top: 0;
+        width: 384px;
+      }
+    }
+  
+    &.squares-3-bg {
+      :global(picture) {
+        padding: 32px 32px 32px 41px;
+      }
+  
+      :global(picture)::before {
+        height: 307px;
+        right: 0;
+        top: 0;
+        width: 337px;
+      }
+  
+      :global(picture)::after {
+        bottom: 0;
+        height: 205px;
+        left: 0;
+        width: 205px;
+      }
+    }
+  
+    &.squares-4-bg {
+      :global(picture) {
+        padding: 32px 32px 33px 41px;
+      }
+  
+      :global(picture)::before {
+        height: 307px;
+        left: 0;
+        top: 0;
+        width: 337px;
+      }
+  
+      :global(picture)::after {
+        bottom: 0;
+        height: 205px;
+        right: 0;
+        width: 205px;
+      }
+    }  
+  }
+  </style>

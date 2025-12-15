@@ -1,0 +1,36 @@
+heading:
+  type: text
+  comment: Headline for the CTA.
+buttonSections:
+  type: array
+  comment: Buttons for calls-to-action.
+  options:
+    structures: _structures.buttonSections
+colorScheme:
+  type: select
+  comment: Color scheme theme for the CTA.
+  options:
+    values:
+      - id: default
+        name: Default
+      - id: contrast
+        name: Contrast
+backgroundColor:
+  type: select
+  comment: Background color for the CTA.
+  options:
+    values:
+      - id: none
+        name: None
+      - id: base
+        name: Base
+      - id: surface
+        name: Surface
+      - id: accent
+        name: Accent
+      - id: highlight
+        name: Highlight
+rounded:
+  type: switch
+  comment: Add rounded corners to the CTA section.
+

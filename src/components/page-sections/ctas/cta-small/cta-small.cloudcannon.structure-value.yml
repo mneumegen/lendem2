@@ -1,0 +1,30 @@
+label: CTA Small
+icon: hero
+description: Simple call-to-action with heading and button.
+value:
+  _component: page-sections/ctas/cta-small
+  heading: Heading text
+  buttonSections:
+    - _component: building-blocks/core-elements/button
+      text: My Button
+      link: ""
+      iconName: ""
+      iconPosition: before
+      hideText: false
+      variant: primary
+      size: md
+  colorScheme: null
+  backgroundColor: base
+  rounded: false
+preview:
+  text:
+    - CTA Small
+  subtext:
+    - key: heading
+  icon: hero
+picker_preview:
+  text: CTA Small
+  subtext: Simple CTA with heading and button.
+_inputs_from_glob:
+  - /src/components/page-sections/ctas/cta-small/cta-small.cloudcannon.inputs.yml
+

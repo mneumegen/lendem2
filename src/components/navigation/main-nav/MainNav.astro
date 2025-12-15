@@ -1,0 +1,127 @@
+---
+import CustomSection from "@builders/custom-section/CustomSection.astro";
+import Bar from "@components/navigation/bar/Bar.astro";
+import Mobile from "@components/navigation/mobile/Mobile.astro";
+import Image from "@core-elements/image/Image.astro";
+import ButtonGroup from "@wrappers/button-group/ButtonGroup.astro";
+
+const {
+  logoSource,
+  logoAlt = "logo",
+  navData = [],
+  buttonSections = [],
+  class: className,
+  ...rest
+} = Astro.props;
+
+const mobileNavData = [
+  ...navData,
+  ...buttonSections.map((button: any) => ({
+    name: button.text || "Button",
+    path: button.href || "#",
+    children: [],
+  })),
+];
+---
+
+<CustomSection
+  maxContentWidth="2xl"
+  paddingHorizontal="lg"
+  paddingVertical="sm"
+  class:list={["main-nav", className]}
+  {...rest}
+>
+  {
+    logoSource && (
+      <a href="/">
+        <Image
+          source={logoSource}
+          alt={logoAlt}
+          editable={false}
+          height={40}
+          width={150}
+          style="margin-top: 0 !important;"
+        />
+      </a>
+    )
+  }
+
+  <Bar navData={navData} class="desktop-main-nav" />
+  <div class="nav-end">
+    {
+      buttonSections.length > 0 && (
+        <ButtonGroup
+          direction="row"
+          align="center"
+          class="desktop-button-group"
+          buttonSections={buttonSections}
+          editable={false}
+        />
+      )
+    }
+  </div>
+  <Mobile
+    logoSource={logoSource}
+    logoAlt={logoAlt}
+    navData={mobileNavData}
+    class="mobile-main-nav"
+  />
+</CustomSection>
+
+<style lang="pcss">
+  .main-nav {
+    font-family: var(--font-headings);
+    font-weight: 500;
+    box-shadow: 0 4px 4px -4px #0c0c0d0d,0 16px 32px -4px #0c0c0d1a;
+    z-index: var(--layer-2);
+    :global(.desktop-main-nav.bar),
+    :global(.desktop-button-group.button-group) {
+      @container (max-width: 768px) {
+        display: none !important;
+      }
+    }
+
+    :global(.nav-hamburger.mobile-button) {
+      @container (min-width: 769px) {
+        display: none;
+      }
+    }
+
+    > :global(.outer-content) > :global(.content) {
+      align-items: center;
+      container-type: inline-size;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+
+      > a > :global(.image img) {
+        height: auto;
+        max-width: min(20em, 100%);
+        width: 150px;
+      }
+
+      :global(.button-group) {
+        margin-top: 0;
+      }
+    }
+
+    > :global(.outer-content) > :global(.content) > :global(.desktop-main-nav.bar) {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    > :global(.outer-content) > :global(.content) > .nav-end {
+      align-items: center;
+      display: flex;
+      justify-content: flex-end;
+      margin-left: auto;
+      flex-shrink: 0;
+      flex-grow: 0;
+
+      > :global(.button-group) {
+        container-type: normal;
+      }
+    }
+  }
+</style>

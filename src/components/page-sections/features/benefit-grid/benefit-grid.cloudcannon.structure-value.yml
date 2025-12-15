@@ -1,0 +1,69 @@
+label: Benefit Grid
+icon: apps
+description: Responsive grid layout for highlighting multiple product benefits.
+value:
+  _component: page-sections/features/benefit-grid
+  eyebrow: Eyebrow text
+  heading: Heading text
+  subtext: Subtext placeholder text that will be replaced with actual content.
+  gap: xl
+  minItemWidth: 280
+  maxItemWidth: 360
+  features: []
+  colorScheme: null
+  backgroundColor: base
+preview:
+  text:
+    - Benefit Grid
+  subtext:
+    - key: heading
+  icon: apps
+picker_preview:
+  text: Benefit Grid
+  subtext: Grid of benefit highlights with icons and descriptions.
+_inputs_from_glob:
+  - /src/components/page-sections/features/benefit-grid/benefit-grid.cloudcannon.inputs.yml
+_structures:
+  benefitGridItems:
+    values:
+      - label: Benefit
+        icon: apps
+        value:
+          _component: page-sections/features/benefit-grid/benefit-item
+          title: Benefit title
+          description: Benefit description placeholder text that will be replaced with actual content.
+          imageSource: /src/assets/images/component-library/profile.jpg
+          imageAlt: Benefit image
+        preview:
+          text:
+            - key: title
+            - Benefit
+          subtext:
+            - key: description
+          image:
+            - key: imageSrc
+        _inputs:
+          title:
+            type: text
+            comment: Name of the benefit.
+          description:
+            type: markdown
+            comment: Supporting description for the benefit.
+            options:
+              blockquote: false
+              bold: true
+              format:
+              italic: true
+              link: true
+              strike: false
+              subscript: true
+              superscript: true
+              underline: false
+              bulletedlist: false
+              numberedlist: false
+          imageSource:
+            type: image
+            comment: Image displayed with the benefit.
+          imageAlt:
+            type: text
+            comment: Alt text for the benefit image.
